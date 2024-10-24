@@ -1,5 +1,6 @@
 import { ApiError } from "@/utils/ApiError";
 import { NextFunction, Request, Response } from "express";
+import { ZodError } from "zod";
 
 type ErrorResponse = {
   message: string;
@@ -13,14 +14,19 @@ const errorHandler = <E extends Error>(
   next: NextFunction
 ) => {
   let error: ApiError;
-  if (!(err instanceof ApiError)) {
+  if (err instanceof ApiError) {
+    error = err;
+  } else if (err instanceof ZodError) {
+    const errors = err.errors.map((issue: any) => ({
+      field: issue.path.join("."),
+      errorMessage: issue.message,
+    }));
+    error = new ApiError(422, "Zod Error", errors, err?.stack || "");
+  } else {
     const statusCode = (err as any)?.statusCode ?? 500;
     const message = err?.message ?? "Something went wrong";
     const errors = (err as any)?.errors ?? [];
-
     error = new ApiError(statusCode, message, errors, err?.stack || "");
-  } else {
-    error = err;
   }
   const response: ErrorResponse = {
     ...error,
