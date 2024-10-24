@@ -7,24 +7,13 @@ import {
   updateProduct,
 } from "./products.controllers";
 import { validateData } from "@/middlewares/validation.middlewares";
-import { createInsertSchema } from "drizzle-zod";
-import { productTable } from "@/db/schema";
+import { createProductSchema, updateProductSchema } from "@/db/schema";
 
 const router = Router();
 
 router.get("/", listProducts);
 router.get("/:id", getProductById);
-router.post(
-  "/",
-  validateData(createInsertSchema(productTable).omit({ id: true }).strict()),
-  createProduct
-);
-router.put(
-  "/:id",
-  validateData(
-    createInsertSchema(productTable).omit({ id: true }).partial().strict()
-  ),
-  updateProduct
-);
+router.post("/", validateData(createProductSchema), createProduct);
+router.put("/:id", validateData(updateProductSchema), updateProduct);
 router.delete("/:id", deleteProduct);
 export default router;

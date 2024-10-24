@@ -8,6 +8,13 @@
       "when": 1729772703664,
       "tag": "0000_thick_wonder_man",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1729799905801,
+      "tag": "0001_vengeful_earthquake",
+      "breakpoints": true
     }
   ]
 }

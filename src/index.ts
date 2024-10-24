@@ -1,6 +1,6 @@
 import express, { json, urlencoded } from "express";
 import { errorHandler } from "@/middlewares";
-import productsRouter from "./routes/products";
+import { registerRoutes } from "./routes";
 
 function startServer() {
   const PORT = 3000;
@@ -9,10 +9,13 @@ function startServer() {
   app.use(json());
 
   app.get("/", (req, res) => {
-    res.send("Hello World!");
+    res.json({
+      message: `Server is running on port ${PORT}`,
+      healthcheck: "ok",
+    });
   });
 
-  app.use("/products", productsRouter);
+  registerRoutes(app);
   app.use(errorHandler);
   app.listen(PORT, () => {
     console.log("Server is running on port", PORT);
