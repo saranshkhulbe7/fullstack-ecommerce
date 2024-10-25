@@ -1,8 +1,10 @@
 import express, { json, urlencoded } from "express";
 import { errorHandler } from "@/middlewares";
 import { registerRoutes } from "./routes";
+import { parsedEnv } from "@/env";
 
 function startServer() {
+  parsedEnv();
   const PORT = 3000;
   const app = express();
   app.use(urlencoded({ extended: false }));
